@@ -9,7 +9,8 @@ import {
   LogOut, 
   Menu, 
   X,
-  Bell
+  Bell,
+  BadgeCheck // Add import for the Identity icon
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -129,6 +130,13 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
               icon={<Users size={18} />} 
               label="Users" 
               active={currentPath === '/users'}
+              onClick={() => setIsMobileMenuOpen(false)}
+            />
+            <NavItem 
+              to="/identity" 
+              icon={<BadgeCheck size={18} />} 
+              label="Identity" 
+              active={currentPath === '/identity'}
               onClick={() => setIsMobileMenuOpen(false)}
             />
             <NavItem 
