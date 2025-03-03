@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import DashboardLayout from '@/components/layout/DashboardLayout';
-import IdentityList, { Identity, IdentityState } from '@/components/identity/IdentityList';
+import IdentityList, { type Identity, IdentityState } from '@/components/identity/IdentityList';
 import IdentityDetails from '@/components/identity/IdentityDetails';
 import KYCSettingsForm, { KYCField } from '@/components/identity/KYCSettingsForm';
 import ApiKeyManagement, { ApiKey } from '@/components/identity/ApiKeyManagement';
