@@ -3,7 +3,7 @@ import React from 'react';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import StatCard from '@/components/dashboard/StatCard';
 import ActivityFeed from '@/components/dashboard/ActivityFeed';
-import { Users, ShieldCheck, UserCheck, AlertTriangle } from 'lucide-react';
+import { Users, ShieldCheck, UserPlus, AlertTriangle } from 'lucide-react';
 
 const Dashboard = () => {
   // Mock data for statistics
@@ -16,11 +16,11 @@ const Dashboard = () => {
       trend: { value: 12, isPositive: true }
     },
     {
-      title: 'Active Sessions',
-      value: '856',
-      description: 'Currently online',
-      icon: <UserCheck size={18} />,
-      trend: { value: 5, isPositive: true }
+      title: 'New Applications',
+      value: '6',
+      description: '2 pending review',
+      icon: <UserPlus size={18} />,
+      trend: { value: 33, isPositive: true }
     },
     {
       title: 'Security Alerts',
