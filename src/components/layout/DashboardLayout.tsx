@@ -10,7 +10,7 @@ import {
   Menu, 
   X,
   Bell,
-  BadgeCheck // Add import for the Identity icon
+  BadgeCheck
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -86,7 +86,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           >
             {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
           </Button>
-          <h1 className="text-lg font-medium">Identity Manager</h1>
+          <h1 className="text-lg font-medium">Neuro-Access</h1>
         </div>
         <Button variant="ghost" size="icon">
           <Bell size={20} />
@@ -105,7 +105,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         )}
       >
         <div className="flex items-center justify-between mb-8">
-          <h1 className="text-xl font-semibold">Identity Manager</h1>
+          <h1 className="text-xl font-semibold">Neuro-Access</h1>
           <Button 
             variant="ghost" 
             size="icon" 
