@@ -13,6 +13,7 @@ interface StatCardProps {
     isPositive: boolean;
   };
   className?: string;
+  style?: React.CSSProperties;
 }
 
 const StatCard = ({
@@ -21,13 +22,17 @@ const StatCard = ({
   description,
   icon,
   trend,
-  className
+  className,
+  style
 }: StatCardProps) => {
   return (
-    <Card className={cn(
-      "overflow-hidden transition-all duration-300 hover:shadow-md hover:border-primary/20",
-      className
-    )}>
+    <Card 
+      className={cn(
+        "overflow-hidden transition-all duration-300 hover:shadow-md hover:border-primary/20",
+        className
+      )}
+      style={style}
+    >
       <CardContent className="p-6">
         <div className="flex justify-between items-start">
           <div className="space-y-1">

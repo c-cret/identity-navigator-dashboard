@@ -19,9 +19,10 @@ interface UserCardProps {
   onEdit?: (user: User) => void;
   onDelete?: (user: User) => void;
   className?: string;
+  style?: React.CSSProperties;
 }
 
-const UserCard = ({ user, onEdit, onDelete, className }: UserCardProps) => {
+const UserCard = ({ user, onEdit, onDelete, className, style }: UserCardProps) => {
   const getStatusColor = (status: User['status']) => {
     switch (status) {
       case 'active':
@@ -36,10 +37,13 @@ const UserCard = ({ user, onEdit, onDelete, className }: UserCardProps) => {
   };
 
   return (
-    <Card className={cn(
-      "overflow-hidden transition-all duration-200 hover:shadow-md hover:border-primary/20",
-      className
-    )}>
+    <Card 
+      className={cn(
+        "overflow-hidden transition-all duration-200 hover:shadow-md hover:border-primary/20",
+        className
+      )}
+      style={style}
+    >
       <CardContent className="p-0">
         <div className="flex justify-between items-start p-4 border-b">
           <div className="flex items-center">
