@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import IdentityList, { type Identity, IdentityState } from '@/components/identity/IdentityList';
@@ -14,7 +13,6 @@ const Identity = () => {
   const [activeTab, setActiveTab] = useState('current');
   const [selectedIdentity, setSelectedIdentity] = useState<Identity | null>(null);
 
-  // Mock data for identities
   const [identities, setIdentities] = useState<Identity[]>([
     {
       id: '1',
@@ -80,7 +78,6 @@ const Identity = () => {
     }
   ]);
 
-  // Mock data for KYC fields
   const [kycFields, setKycFields] = useState<KYCField[]>([
     { id: 'field_1', name: 'firstName', label: 'First Name', required: true, enabled: true, type: 'text' },
     { id: 'field_2', name: 'lastName', label: 'Last Name', required: true, enabled: true, type: 'text' },
@@ -91,7 +88,6 @@ const Identity = () => {
     { id: 'field_7', name: 'profilePicture', label: 'Profile Picture', required: false, enabled: true, type: 'file' }
   ]);
 
-  // Mock data for API keys
   const [apiKeys, setApiKeys] = useState<ApiKey[]>([
     {
       id: 'key_1',
@@ -118,7 +114,6 @@ const Identity = () => {
     }
   ]);
 
-  // Mock roles and permissions
   const [permissions, setPermissions] = useState<Permission[]>([
     { id: 'perm_1', name: 'Read Identities', description: 'View identity information' },
     { id: 'perm_2', name: 'Create Identities', description: 'Create new identities' },
@@ -154,7 +149,6 @@ const Identity = () => {
     }
   ]);
 
-  // Handler for updating identity state
   const handleUpdateIdentityState = (identity: Identity, newState: IdentityState) => {
     setIdentities(prev => 
       prev.map(item => 
@@ -172,12 +166,10 @@ const Identity = () => {
     }
   };
 
-  // Handler for saving KYC settings
   const handleSaveKYCSettings = (fields: KYCField[]) => {
     setKycFields(fields);
   };
 
-  // API Key handlers
   const handleCreateApiKey = (name: string, role: string) => {
     const newKey: ApiKey = {
       id: `key_${Date.now()}`,
@@ -213,7 +205,6 @@ const Identity = () => {
     );
   };
 
-  // Role handlers
   const handleCreateRole = (role: Omit<Role, 'id'>) => {
     const newRole: Role = {
       ...role,
@@ -239,6 +230,12 @@ const Identity = () => {
   const pendingIdentities = identities.filter(id => id.state === 'pending');
 
   const getAvailableRoles = () => roles.map(role => ({ id: role.id, name: role.name }));
+
+  console.log("Rendering Identity Management page", { 
+    identitiesCount: identities.length,
+    selectedIdentity,
+    activeTab
+  });
 
   return (
     <DashboardLayout>
