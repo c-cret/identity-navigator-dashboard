@@ -1,13 +1,6 @@
 import React, { useState } from 'react';
 import DashboardLayout from '@/components/layout/DashboardLayout';
-import AuthenticationCard from '@/components/auth/AuthenticationCard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Switch } from '@/components/ui/switch';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/components/ui/use-toast';
 import KYCSettingsForm, { KYCField } from '@/components/identity/KYCSettingsForm';
 import ApiKeyManagement, { ApiKey } from '@/components/identity/ApiKeyManagement';
@@ -189,137 +182,16 @@ const Settings = () => {
         <div>
           <h1 className="text-3xl font-semibold tracking-tight pb-1">Settings</h1>
           <p className="text-muted-foreground">
-            Configure authentication, security, and identity settings
+            Configure identity settings
           </p>
         </div>
 
-        <Tabs defaultValue="authentication" className="space-y-4">
-          <TabsList className="grid w-full grid-cols-4 lg:w-[600px]">
-            <TabsTrigger value="authentication">Authentication</TabsTrigger>
-            <TabsTrigger value="security">Security</TabsTrigger>
+        <Tabs defaultValue="kyc" className="space-y-4">
+          <TabsList className="grid w-full grid-cols-2 lg:w-[400px]">
             <TabsTrigger value="kyc">KYC Settings</TabsTrigger>
             <TabsTrigger value="apikeys">API Keys</TabsTrigger>
           </TabsList>
           
-          <TabsContent value="authentication" className="space-y-4 animate-fade-in">
-            <AuthenticationCard 
-              methods={authMethods}
-              onToggle={handleAuthToggle}
-            />
-          </TabsContent>
-          
-          <TabsContent value="security" className="space-y-4 animate-fade-in">
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle>Security Settings</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid gap-6">
-                  <div className="flex flex-col space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div className="space-y-0.5">
-                        <h3 className="text-sm font-medium">Account Lockout</h3>
-                        <p className="text-sm text-muted-foreground">
-                          Lock accounts after failed login attempts
-                        </p>
-                      </div>
-                      <Switch 
-                        checked={securitySettings.lockoutEnabled}
-                        onCheckedChange={(checked) => 
-                          handleSecurityToggle('lockoutEnabled', checked)
-                        }
-                      />
-                    </div>
-                    
-                    {securitySettings.lockoutEnabled && (
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pl-2 border-l-2 border-muted ml-2 animate-fade-in">
-                        <div className="space-y-2">
-                          <Label htmlFor="maximumAttempts">Maximum attempts</Label>
-                          <Input 
-                            id="maximumAttempts"
-                            type="number" 
-                            value={securitySettings.maximumAttempts}
-                            onChange={(e) => setSecuritySettings(prev => ({
-                              ...prev,
-                              maximumAttempts: parseInt(e.target.value)
-                            }))}
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="lockoutDuration">Lockout duration (minutes)</Label>
-                          <Input 
-                            id="lockoutDuration"
-                            type="number" 
-                            value={securitySettings.lockoutDuration}
-                            onChange={(e) => setSecuritySettings(prev => ({
-                              ...prev,
-                              lockoutDuration: parseInt(e.target.value)
-                            }))}
-                          />
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  <Separator />
-
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-0.5">
-                      <h3 className="text-sm font-medium">Strong Passwords</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Require passwords to meet complexity requirements
-                      </p>
-                    </div>
-                    <Switch 
-                      checked={securitySettings.requireStrongPasswords}
-                      onCheckedChange={(checked) => 
-                        handleSecurityToggle('requireStrongPasswords', checked)
-                      }
-                    />
-                  </div>
-
-                  <Separator />
-
-                  <div className="space-y-2">
-                    <Label htmlFor="passwordExpiration">Password expiration (days)</Label>
-                    <Input 
-                      id="passwordExpiration"
-                      type="number" 
-                      value={securitySettings.passwordExpiration}
-                      onChange={(e) => setSecuritySettings(prev => ({
-                        ...prev,
-                        passwordExpiration: parseInt(e.target.value)
-                      }))}
-                    />
-                    <p className="text-xs text-muted-foreground">
-                      Set to 0 to disable password expiration
-                    </p>
-                  </div>
-
-                  <Separator />
-
-                  <div className="space-y-2">
-                    <Label htmlFor="sessionTimeout">Session timeout (minutes)</Label>
-                    <Input 
-                      id="sessionTimeout"
-                      type="number" 
-                      value={securitySettings.sessionTimeout}
-                      onChange={(e) => setSecuritySettings(prev => ({
-                        ...prev,
-                        sessionTimeout: parseInt(e.target.value)
-                      }))}
-                    />
-                    <p className="text-xs text-muted-foreground">
-                      Automatically log out inactive users
-                    </p>
-                  </div>
-
-                  <Button onClick={handleSecuritySave}>Save Changes</Button>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
           <TabsContent value="kyc" className="space-y-4 animate-fade-in">
             <KYCSettingsForm 
               fields={kycFields}

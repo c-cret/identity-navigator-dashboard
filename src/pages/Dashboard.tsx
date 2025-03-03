@@ -1,23 +1,15 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import StatCard from '@/components/dashboard/StatCard';
 import ActivityFeed from '@/components/dashboard/ActivityFeed';
-import { Users, ShieldCheck, UserPlus, AlertTriangle } from 'lucide-react';
+import { UserPlus, AlertTriangle } from 'lucide-react';
 
 const Dashboard = () => {
   const navigate = useNavigate();
 
   // Mock data for statistics
   const stats = [
-    {
-      title: 'Total Users',
-      value: '1,234',
-      description: '24 new this week',
-      icon: <Users size={18} />,
-      trend: { value: 12, isPositive: true }
-    },
     {
       title: 'New Applications',
       value: '6',
@@ -32,13 +24,6 @@ const Dashboard = () => {
       description: 'Unresolved issues',
       icon: <AlertTriangle size={18} />,
       trend: { value: 50, isPositive: false }
-    },
-    {
-      title: 'Auth Providers',
-      value: '5',
-      description: 'Active providers',
-      icon: <ShieldCheck size={18} />,
-      trend: { value: 0, isPositive: true }
     }
   ];
 
@@ -110,7 +95,7 @@ const Dashboard = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
           {stats.map((stat, index) => (
             <StatCard
               key={stat.title}
