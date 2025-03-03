@@ -1,11 +1,14 @@
 
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import StatCard from '@/components/dashboard/StatCard';
 import ActivityFeed from '@/components/dashboard/ActivityFeed';
 import { Users, ShieldCheck, UserPlus, AlertTriangle } from 'lucide-react';
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+
   // Mock data for statistics
   const stats = [
     {
@@ -20,7 +23,8 @@ const Dashboard = () => {
       value: '6',
       description: '2 pending review',
       icon: <UserPlus size={18} />,
-      trend: { value: 33, isPositive: true }
+      trend: { value: 33, isPositive: true },
+      onClick: () => navigate('/identity?tab=pending')
     },
     {
       title: 'Security Alerts',
@@ -111,7 +115,7 @@ const Dashboard = () => {
             <StatCard
               key={stat.title}
               {...stat}
-              className="animate-scale-in"
+              className={`animate-scale-in ${stat.onClick ? 'cursor-pointer hover:scale-105 transition-transform' : ''}`}
               style={{ animationDelay: `${index * 50}ms` }}
             />
           ))}

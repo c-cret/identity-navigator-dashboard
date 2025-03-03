@@ -12,6 +12,7 @@ interface StatCardProps {
     value: number;
     isPositive: boolean;
   };
+  onClick?: () => void;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -22,6 +23,7 @@ const StatCard = ({
   description,
   icon,
   trend,
+  onClick,
   className,
   style
 }: StatCardProps) => {
@@ -29,9 +31,11 @@ const StatCard = ({
     <Card 
       className={cn(
         "overflow-hidden transition-all duration-300 hover:shadow-md hover:border-primary/20",
+        onClick && "cursor-pointer",
         className
       )}
       style={style}
+      onClick={onClick}
     >
       <CardContent className="p-6">
         <div className="flex justify-between items-start">

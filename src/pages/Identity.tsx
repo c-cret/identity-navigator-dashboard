@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import IdentityList, { type Identity, IdentityState } from '@/components/identity/IdentityList';
 import IdentityDetails from '@/components/identity/IdentityDetails';
@@ -8,8 +9,24 @@ import { useToast } from '@/components/ui/use-toast';
 
 const Identity = () => {
   const { toast } = useToast();
-  const [activeTab, setActiveTab] = useState('current');
+  const location = useLocation();
+  const navigate = useNavigate();
+  const queryParams = new URLSearchParams(location.search);
+  const tabFromQuery = queryParams.get('tab');
+  
+  const [activeTab, setActiveTab] = useState(tabFromQuery || 'current');
   const [selectedIdentity, setSelectedIdentity] = useState<Identity | null>(null);
+
+  useEffect(() => {
+    if (tabFromQuery && ['current', 'pending', 'roles'].includes(tabFromQuery)) {
+      setActiveTab(tabFromQuery);
+    }
+  }, [tabFromQuery]);
+
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+    navigate(`/identity?tab=${value}`, { replace: true });
+  };
 
   const [identities, setIdentities] = useState<Identity[]>([
     {
@@ -155,7 +172,8 @@ const Identity = () => {
   console.log("Rendering Identity Management page", { 
     identitiesCount: identities.length,
     selectedIdentity,
-    activeTab
+    activeTab,
+    tabFromQuery
   });
 
   return (
@@ -175,7 +193,7 @@ const Identity = () => {
             onUpdateState={handleUpdateIdentityState}
           />
         ) : (
-          <Tabs defaultValue={activeTab} value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+          <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-4">
             <TabsList className="grid grid-cols-3 w-full">
               <TabsTrigger value="current">Current IDs</TabsTrigger>
               <TabsTrigger value="pending">Pending Applications</TabsTrigger>
