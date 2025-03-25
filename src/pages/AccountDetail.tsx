@@ -1,6 +1,6 @@
 
-import React, { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import { 
   Tabs, 
@@ -146,8 +146,20 @@ const mockIdentities: Record<string, Identity> = {
 const AccountDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
-  const [activeTab, setActiveTab] = useState('details');
+  
+  // Check if there's a tab in the URL query parameters
+  const queryParams = new URLSearchParams(location.search);
+  const tabFromQuery = queryParams.get('tab');
+  
+  const [activeTab, setActiveTab] = useState(tabFromQuery || 'details');
+
+  useEffect(() => {
+    if (tabFromQuery) {
+      setActiveTab(tabFromQuery);
+    }
+  }, [tabFromQuery]);
 
   const account = id ? mockAccounts[id] : undefined;
   const identity = account?.hasIdentity && id ? mockIdentities[id] : undefined;
@@ -190,6 +202,11 @@ const AccountDetail = () => {
     });
   };
 
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+    navigate(`/accounts/${id}?tab=${value}`, { replace: true });
+  };
+
   return (
     <DashboardLayout>
       <div className="space-y-6">
@@ -210,7 +227,7 @@ const AccountDetail = () => {
           </div>
         </div>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+        <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-4">
           <TabsList>
             <TabsTrigger value="details">Account Details</TabsTrigger>
             <TabsTrigger value="identity">Identity</TabsTrigger>

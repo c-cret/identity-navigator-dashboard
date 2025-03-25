@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -21,20 +21,11 @@ import {
   XCircle, 
   FileCheck, 
   ShieldAlert,
-  Edit,
-  Save,
   UserPlus,
   AlertTriangle
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { Account, Identity } from '@/types/account';
-import { 
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 
 interface AccountIdentityProps {
   identity?: Identity;
@@ -44,34 +35,8 @@ interface AccountIdentityProps {
 }
 
 const AccountIdentity = ({ identity, account, onUpdateIdentity, onCreateIdentity }: AccountIdentityProps) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState(identity ? {
-    firstName: identity.firstName,
-    lastName: identity.lastName,
-    identityNumber: identity.identityNumber,
-    address: identity.address || '',
-    state: identity.state,
-  } : {
-    firstName: '',
-    lastName: '',
-    identityNumber: '',
-    address: '',
-    state: 'pending' as const,
-  });
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleStateChange = (value: string) => {
-    setFormData(prev => ({ ...prev, state: value as any }));
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onUpdateIdentity(formData);
-    setIsEditing(false);
+  const handleStateChange = (newState: string) => {
+    onUpdateIdentity({ state: newState as any });
   };
 
   const handleCreateIdentity = () => {
@@ -194,30 +159,13 @@ const AccountIdentity = ({ identity, account, onUpdateIdentity, onCreateIdentity
               {identity.state.charAt(0).toUpperCase() + identity.state.slice(1)}
             </Badge>
           </div>
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={() => setIsEditing(!isEditing)}
-          >
-            {isEditing ? (
-              <>
-                <Save className="h-4 w-4 mr-2" />
-                Cancel
-              </>
-            ) : (
-              <>
-                <Edit className="h-4 w-4 mr-2" />
-                Edit
-              </>
-            )}
-          </Button>
         </div>
         <CardDescription>
           View and manage identity verification details
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="space-y-6">
           <div className="pb-4 mb-4 border-b">
             <p className="text-sm text-muted-foreground">
               Identity created on {formatDate(identity.createdAt)}
@@ -228,86 +176,31 @@ const AccountIdentity = ({ identity, account, onUpdateIdentity, onCreateIdentity
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="firstName">First Name</Label>
-                {isEditing ? (
-                  <Input 
-                    id="firstName" 
-                    name="firstName" 
-                    value={formData.firstName} 
-                    onChange={handleChange} 
-                  />
-                ) : (
-                  <div className="p-2 border rounded-md bg-muted/20">{identity.firstName}</div>
-                )}
+                <div className="p-2 border rounded-md bg-muted/20">{identity.firstName}</div>
               </div>
               
               <div className="grid gap-2">
                 <Label htmlFor="lastName">Last Name</Label>
-                {isEditing ? (
-                  <Input 
-                    id="lastName" 
-                    name="lastName" 
-                    value={formData.lastName} 
-                    onChange={handleChange} 
-                  />
-                ) : (
-                  <div className="p-2 border rounded-md bg-muted/20">{identity.lastName}</div>
-                )}
+                <div className="p-2 border rounded-md bg-muted/20">{identity.lastName}</div>
               </div>
             </div>
             
             <div className="grid gap-2">
               <Label htmlFor="identityNumber">Identity Number</Label>
-              {isEditing ? (
-                <Input 
-                  id="identityNumber" 
-                  name="identityNumber" 
-                  value={formData.identityNumber} 
-                  onChange={handleChange} 
-                />
-              ) : (
-                <div className="p-2 border rounded-md bg-muted/20">{identity.identityNumber}</div>
-              )}
+              <div className="p-2 border rounded-md bg-muted/20">{identity.identityNumber}</div>
             </div>
             
             <div className="grid gap-2">
               <Label htmlFor="address">Address</Label>
-              {isEditing ? (
-                <Textarea 
-                  id="address" 
-                  name="address" 
-                  value={formData.address} 
-                  onChange={handleChange} 
-                  rows={3}
-                />
-              ) : (
-                <div className="p-2 border rounded-md bg-muted/20 min-h-[80px]">{identity.address}</div>
-              )}
+              <div className="p-2 border rounded-md bg-muted/20 min-h-[80px]">{identity.address}</div>
             </div>
 
             <div className="grid gap-2">
               <Label htmlFor="state">Identity Status</Label>
-              {isEditing ? (
-                <Select
-                  value={formData.state}
-                  onValueChange={handleStateChange}
-                >
-                  <SelectTrigger id="state">
-                    <SelectValue placeholder="Select a status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="approved">Approved</SelectItem>
-                    <SelectItem value="pending">Pending</SelectItem>
-                    <SelectItem value="rejected">Rejected</SelectItem>
-                    <SelectItem value="obsoleted">Obsoleted</SelectItem>
-                    <SelectItem value="compromised">Compromised</SelectItem>
-                  </SelectContent>
-                </Select>
-              ) : (
-                <div className="p-2 border rounded-md bg-muted/20 flex items-center">
-                  {getStatusIcon(identity.state)}
-                  {identity.state.charAt(0).toUpperCase() + identity.state.slice(1)}
-                </div>
-              )}
+              <div className="p-2 border rounded-md bg-muted/20 flex items-center">
+                {getStatusIcon(identity.state)}
+                {identity.state.charAt(0).toUpperCase() + identity.state.slice(1)}
+              </div>
             </div>
 
             {identity.additionalFields && Object.entries(identity.additionalFields).length > 0 && (
@@ -325,10 +218,54 @@ const AccountIdentity = ({ identity, account, onUpdateIdentity, onCreateIdentity
             )}
           </div>
           
-          {isEditing && (
-            <Button type="submit">Save Changes</Button>
-          )}
-        </form>
+          <div className="space-y-3 mt-8">
+            <h3 className="font-medium">Identity Actions</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {identity.state !== 'approved' && (
+                <Button 
+                  onClick={() => handleStateChange('approved')}
+                  className="w-full bg-green-600 hover:bg-green-700"
+                >
+                  <CheckCircle className="mr-2 h-4 w-4" />
+                  Approve Identity
+                </Button>
+              )}
+              
+              {identity.state !== 'rejected' && (
+                <Button 
+                  onClick={() => handleStateChange('rejected')}
+                  variant="destructive"
+                  className="w-full"
+                >
+                  <XCircle className="mr-2 h-4 w-4" />
+                  Reject Identity
+                </Button>
+              )}
+              
+              {identity.state !== 'obsoleted' && (
+                <Button 
+                  onClick={() => handleStateChange('obsoleted')}
+                  variant="outline"
+                  className="w-full"
+                >
+                  <FileCheck className="mr-2 h-4 w-4" />
+                  Mark as Obsolete
+                </Button>
+              )}
+              
+              {identity.state !== 'compromised' && (
+                <Button 
+                  onClick={() => handleStateChange('compromised')}
+                  variant="secondary"
+                  className="w-full text-purple-600 dark:text-purple-400"
+                >
+                  <ShieldAlert className="mr-2 h-4 w-4" />
+                  Mark as Compromised
+                </Button>
+              )}
+            </div>
+          </div>
+        </div>
       </CardContent>
     </Card>
   );

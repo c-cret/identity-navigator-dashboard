@@ -3,14 +3,17 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import AccountList from '@/components/accounts/AccountList';
+import IdentityApplicationsList from '@/components/accounts/IdentityApplicationsList';
 import { useToast } from '@/components/ui/use-toast';
 import { Button } from '@/components/ui/button';
 import { UserPlus } from 'lucide-react';
-import type { Account } from '@/types/account';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import type { Account, Identity } from '@/types/account';
 
 const Accounts = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState('accounts');
 
   // Mock accounts data
   const accounts: Account[] = [
@@ -77,6 +80,42 @@ const Accounts = () => {
     }
   ];
 
+  // Mock identity applications (pending identities)
+  const identityApplications: Identity[] = [
+    {
+      id: 'app1',
+      accountId: '2',
+      firstName: 'Emily',
+      lastName: 'Johnson',
+      identityNumber: 'ID987654321',
+      state: 'pending',
+      address: '456 Oak Ave, San Francisco, CA 94102',
+      createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+      profilePicture: 'https://i.pravatar.cc/150?img=5',
+    },
+    {
+      id: 'app2',
+      accountId: '7',
+      firstName: 'Thomas',
+      lastName: 'Wilson',
+      identityNumber: 'ID567891234',
+      state: 'pending',
+      address: '789 Pine St, Boston, MA 02108',
+      createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+    },
+    {
+      id: 'app3',
+      accountId: '8',
+      firstName: 'Olivia',
+      lastName: 'Martinez',
+      identityNumber: 'ID123789456',
+      state: 'pending',
+      address: '321 Cedar Ave, Chicago, IL 60601',
+      createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+      profilePicture: 'https://i.pravatar.cc/150?img=15',
+    }
+  ];
+
   const handleViewAccount = (account: Account) => {
     navigate(`/accounts/${account.id}`);
   };
@@ -88,6 +127,34 @@ const Accounts = () => {
     });
   };
 
+  const handleViewIdentity = (identity: Identity) => {
+    // Find the account associated with this identity
+    const account = accounts.find(acc => acc.id === identity.accountId);
+    if (account) {
+      navigate(`/accounts/${account.id}?tab=identity`);
+    } else {
+      toast({
+        title: "Error",
+        description: "Could not find associated account",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleApproveIdentity = (identity: Identity) => {
+    toast({
+      title: "Identity Approved",
+      description: `${identity.firstName} ${identity.lastName}'s identity has been approved`,
+    });
+  };
+
+  const handleRejectIdentity = (identity: Identity) => {
+    toast({
+      title: "Identity Rejected",
+      description: `${identity.firstName} ${identity.lastName}'s identity has been rejected`,
+    });
+  };
+
   return (
     <DashboardLayout>
       <div className="space-y-6">
@@ -95,7 +162,7 @@ const Accounts = () => {
           <div>
             <h1 className="text-3xl font-semibold tracking-tight pb-1">Accounts</h1>
             <p className="text-muted-foreground">
-              Manage user accounts and identities
+              Manage user accounts and identity verifications
             </p>
           </div>
           <Button onClick={handleAddAccount}>
@@ -104,10 +171,28 @@ const Accounts = () => {
           </Button>
         </div>
 
-        <AccountList 
-          accounts={accounts} 
-          onView={handleViewAccount}
-        />
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+          <TabsList>
+            <TabsTrigger value="accounts">Accounts</TabsTrigger>
+            <TabsTrigger value="applications">Identity Applications</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="accounts" className="space-y-4 animate-fade-in">
+            <AccountList 
+              accounts={accounts} 
+              onView={handleViewAccount}
+            />
+          </TabsContent>
+          
+          <TabsContent value="applications" className="space-y-4 animate-fade-in">
+            <IdentityApplicationsList 
+              applications={identityApplications}
+              onView={handleViewIdentity}
+              onApprove={handleApproveIdentity}
+              onReject={handleRejectIdentity}
+            />
+          </TabsContent>
+        </Tabs>
       </div>
     </DashboardLayout>
   );

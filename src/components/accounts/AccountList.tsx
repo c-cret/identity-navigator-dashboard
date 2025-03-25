@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { 
   DropdownMenu,
   DropdownMenuContent,
@@ -20,7 +21,8 @@ import {
 import { 
   MoreHorizontal, 
   Search,
-  UserRound,
+  Check,
+  X
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { Account } from '@/types/account';
@@ -39,16 +41,6 @@ const AccountList = ({ accounts, onView, className }: AccountListProps) => {
     account.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
     account.phoneNumber.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
-  const formatDate = (date?: Date) => {
-    if (!date) return 'Never';
-    
-    return new Intl.DateTimeFormat('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric'
-    }).format(date);
-  };
 
   return (
     <div className={cn("space-y-4", className)}>
@@ -71,6 +63,7 @@ const AccountList = ({ accounts, onView, className }: AccountListProps) => {
               <TableHead className="w-[250px]">Account</TableHead>
               <TableHead className="hidden md:table-cell">Email</TableHead>
               <TableHead className="hidden md:table-cell">Phone</TableHead>
+              <TableHead className="w-[100px] text-center">Identity</TableHead>
               <TableHead className="w-[50px]">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -83,24 +76,9 @@ const AccountList = ({ accounts, onView, className }: AccountListProps) => {
                   style={{ animationDelay: `${index * 30}ms` }}
                 >
                   <TableCell>
-                    <div className="flex items-center gap-3">
-                      {account.avatar ? (
-                        <div className="w-8 h-8 rounded-full overflow-hidden border border-border/50">
-                          <img 
-                            src={account.avatar} 
-                            alt={account.name}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                      ) : (
-                        <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center">
-                          {account.name.charAt(0).toUpperCase()}
-                        </div>
-                      )}
-                      <div>
-                        <div className="font-medium">{account.name}</div>
-                        <div className="text-xs text-muted-foreground md:hidden">{account.email}</div>
-                      </div>
+                    <div>
+                      <div className="font-medium">{account.name}</div>
+                      <div className="text-xs text-muted-foreground md:hidden">{account.email}</div>
                     </div>
                   </TableCell>
                   <TableCell className="hidden md:table-cell">
@@ -108,6 +86,19 @@ const AccountList = ({ accounts, onView, className }: AccountListProps) => {
                   </TableCell>
                   <TableCell className="hidden md:table-cell">
                     {account.phoneNumber}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {account.hasIdentity ? (
+                      <Badge variant="outline" className="bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
+                        <Check className="w-3 h-3 mr-1" />
+                        Yes
+                      </Badge>
+                    ) : (
+                      <Badge variant="outline" className="bg-gray-100 text-gray-500 dark:bg-gray-800/50 dark:text-gray-400">
+                        <X className="w-3 h-3 mr-1" />
+                        No
+                      </Badge>
+                    )}
                   </TableCell>
                   <TableCell>
                     <DropdownMenu>
@@ -129,7 +120,7 @@ const AccountList = ({ accounts, onView, className }: AccountListProps) => {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">
+                <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
                   No accounts found
                 </TableCell>
               </TableRow>
