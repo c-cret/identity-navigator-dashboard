@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import DashboardLayout from '@/components/layout/DashboardLayout';
@@ -473,57 +472,44 @@ const AccountDetail = () => {
               account={account}
             />
             
-            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 p-4 border rounded-lg bg-card">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 p-4 border rounded-lg bg-card">
               <h3 className="text-lg font-semibold col-span-full mb-2">Account Actions</h3>
               
               <Button 
-                variant="outline" 
-                size="sm"
-                className="justify-start sm:justify-center"
+                variant="outline"
                 onClick={() => setIsChangePasswordOpen(true)}
               >
-                <KeyRound className="h-4 w-4 mr-2" />
-                <span className="sm:hidden lg:inline">Password</span>
+                Change Password
               </Button>
               
               <Button 
-                variant="outline" 
-                size="sm"
-                className="justify-start sm:justify-center"
+                variant="outline"
                 onClick={handleAssignRole}
               >
-                <UserCog className="h-4 w-4 mr-2" />
-                <span className="sm:hidden lg:inline">Assign Role</span>
+                Assign Role
               </Button>
               
               <Button 
-                variant="outline" 
-                size="sm"
-                className="justify-start sm:justify-center"
+                variant="outline"
                 onClick={handleAccountRecovery}
               >
-                <RefreshCw className="h-4 w-4 mr-2" />
-                <span className="sm:hidden lg:inline">Recovery</span>
+                Account Recovery
               </Button>
               
               <Button 
-                variant="outline" 
-                size="sm"
-                className="justify-start sm:justify-center text-amber-600"
+                variant="outline"
+                className="text-amber-600"
                 onClick={() => setIsInactivateAccountOpen(true)}
               >
-                <ShieldAlert className="h-4 w-4 mr-2" />
-                <span className="sm:hidden lg:inline">Inactivate</span>
+                Inactivate Account
               </Button>
               
               <Button 
-                variant="outline" 
-                size="sm"
-                className="justify-start sm:justify-center text-destructive"
+                variant="outline"
+                className="text-destructive"
                 onClick={() => setIsDeleteAccountOpen(true)}
               >
-                <UserMinus className="h-4 w-4 mr-2" />
-                <span className="sm:hidden lg:inline">Delete</span>
+                Delete Account
               </Button>
             </div>
           </TabsContent>
