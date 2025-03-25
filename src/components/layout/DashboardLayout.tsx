@@ -3,14 +3,11 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { 
-  LayoutDashboard, 
   Users, 
-  Settings, 
   LogOut, 
   Menu, 
   X,
-  Bell,
-  BadgeCheck
+  Bell
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -119,31 +116,10 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         <nav className="flex-1">
           <div className="space-y-1">
             <NavItem 
-              to="/dashboard" 
-              icon={<LayoutDashboard size={18} />} 
-              label="Dashboard" 
-              active={currentPath === '/dashboard'}
-              onClick={() => setIsMobileMenuOpen(false)}
-            />
-            <NavItem 
-              to="/users" 
+              to="/accounts" 
               icon={<Users size={18} />} 
-              label="Users" 
-              active={currentPath === '/users'}
-              onClick={() => setIsMobileMenuOpen(false)}
-            />
-            <NavItem 
-              to="/identity" 
-              icon={<BadgeCheck size={18} />} 
-              label="Identity" 
-              active={currentPath === '/identity'}
-              onClick={() => setIsMobileMenuOpen(false)}
-            />
-            <NavItem 
-              to="/settings" 
-              icon={<Settings size={18} />} 
-              label="Settings" 
-              active={currentPath === '/settings'}
+              label="Accounts" 
+              active={currentPath.startsWith('/accounts')}
               onClick={() => setIsMobileMenuOpen(false)}
             />
           </div>
