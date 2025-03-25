@@ -1,3 +1,4 @@
+
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 
@@ -15,6 +16,15 @@ const badgeVariants = cva(
         destructive:
           "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
         outline: "text-foreground",
+        // Neuro brand specific badge variants
+        access: "border-transparent bg-neuro-access text-white hover:bg-neuro-access/80",
+        assets: "border-transparent bg-neuro-assets text-white hover:bg-neuro-assets/80",
+        pay: "border-transparent bg-neuro-pay text-neuro-text hover:bg-neuro-pay/80",
+        admin: "border-transparent bg-neuro-admin text-white hover:bg-neuro-admin/80",
+        "outline-access": "border-neuro-access text-neuro-access",
+        "outline-assets": "border-neuro-assets text-neuro-assets",
+        "outline-pay": "border-neuro-pay text-neuro-pay",
+        "outline-admin": "border-neuro-admin text-neuro-admin",
       },
     },
     defaultVariants: {
