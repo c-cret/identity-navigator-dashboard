@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Edit, Save } from 'lucide-react';
+import { Save } from 'lucide-react';
 import type { Account } from '@/types/account';
 
 interface AccountInfoProps {
@@ -53,23 +53,16 @@ const AccountInfo = ({ account, onUpdateAccount }: AccountInfoProps) => {
       <CardHeader className="space-y-1">
         <div className="flex items-center justify-between">
           <CardTitle className="text-2xl">Account Information</CardTitle>
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={() => setIsEditing(!isEditing)}
-          >
-            {isEditing ? (
-              <>
-                <Save className="h-4 w-4 mr-2" />
-                Cancel
-              </>
-            ) : (
-              <>
-                <Edit className="h-4 w-4 mr-2" />
-                Edit
-              </>
-            )}
-          </Button>
+          {isEditing && (
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => setIsEditing(false)}
+            >
+              <Save className="h-4 w-4 mr-2" />
+              Cancel
+            </Button>
+          )}
         </div>
         <CardDescription>
           View and manage account details

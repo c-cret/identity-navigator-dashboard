@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import DashboardLayout from '@/components/layout/DashboardLayout';
@@ -10,16 +11,12 @@ import {
 import AccountInfo from '@/components/accounts/AccountInfo';
 import AccountIdentity from '@/components/accounts/AccountIdentity';
 import AccountHistory from '@/components/accounts/AccountHistory';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, KeyRound, UserCog, UserMinus, ShieldAlert, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/components/ui/use-toast';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import type { Account, Identity, ActivityItem, OldIdentity } from '@/types/account';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
   Dialog,
   DialogContent,
@@ -428,10 +425,22 @@ const AccountDetail = () => {
     });
   };
 
+  // Function to get status badge color
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'active':
+        return <Badge variant="outline" className="bg-green-100 text-green-800 border-green-200">Active</Badge>;
+      case 'inactive':
+        return <Badge variant="outline" className="bg-amber-100 text-amber-800 border-amber-200">Inactive</Badge>;
+      default:
+        return <Badge variant="outline">{status}</Badge>;
+    }
+  };
+
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b">
           <div className="flex items-center gap-4">
             <Button 
               variant="outline" 
@@ -445,38 +454,64 @@ const AccountDetail = () => {
               <h1 className="text-3xl font-semibold tracking-tight pb-1">
                 {account.name}
               </h1>
-              <p className="text-muted-foreground">{account.email}</p>
+              <div className="flex items-center gap-2">
+                <p className="text-muted-foreground">{account.email}</p>
+                {getStatusBadge(account.status)}
+              </div>
             </div>
           </div>
           
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button>Account Actions</Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuItem onClick={() => setIsChangePasswordOpen(true)}>
-                Change Password
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleAccountRecovery}>
-                Account Recovery
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleAssignRole}>
-                Assign Role
-              </DropdownMenuItem>
-              <DropdownMenuItem 
-                onClick={() => setIsInactivateAccountOpen(true)}
-                className="text-amber-600"
-              >
-                Inactivate Account
-              </DropdownMenuItem>
-              <DropdownMenuItem 
-                onClick={() => setIsDeleteAccountOpen(true)}
-                className="text-destructive"
-              >
-                Delete Account
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 w-full sm:w-auto">
+            <Button 
+              variant="outline" 
+              size="sm"
+              className="justify-start sm:justify-center"
+              onClick={() => setIsChangePasswordOpen(true)}
+            >
+              <KeyRound className="h-4 w-4 mr-2" />
+              <span className="sm:hidden lg:inline">Password</span>
+            </Button>
+            
+            <Button 
+              variant="outline" 
+              size="sm"
+              className="justify-start sm:justify-center"
+              onClick={handleAssignRole}
+            >
+              <UserCog className="h-4 w-4 mr-2" />
+              <span className="sm:hidden lg:inline">Assign Role</span>
+            </Button>
+            
+            <Button 
+              variant="outline" 
+              size="sm"
+              className="justify-start sm:justify-center"
+              onClick={handleAccountRecovery}
+            >
+              <RefreshCw className="h-4 w-4 mr-2" />
+              <span className="sm:hidden lg:inline">Recovery</span>
+            </Button>
+            
+            <Button 
+              variant="outline" 
+              size="sm"
+              className="justify-start sm:justify-center text-amber-600"
+              onClick={() => setIsInactivateAccountOpen(true)}
+            >
+              <ShieldAlert className="h-4 w-4 mr-2" />
+              <span className="sm:hidden lg:inline">Inactivate</span>
+            </Button>
+            
+            <Button 
+              variant="outline" 
+              size="sm"
+              className="justify-start sm:justify-center text-destructive"
+              onClick={() => setIsDeleteAccountOpen(true)}
+            >
+              <UserMinus className="h-4 w-4 mr-2" />
+              <span className="sm:hidden lg:inline">Delete</span>
+            </Button>
+          </div>
         </div>
 
         <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-4">
