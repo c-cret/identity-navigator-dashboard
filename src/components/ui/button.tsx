@@ -1,4 +1,3 @@
-
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
@@ -19,15 +18,6 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        // Neuro brand specific button variants
-        access: "bg-neuro-access text-white hover:bg-neuro-access/90",
-        assets: "bg-neuro-assets text-white hover:bg-neuro-assets/90",
-        pay: "bg-neuro-pay text-neuro-text hover:bg-neuro-pay/90",
-        admin: "bg-neuro-admin text-white hover:bg-neuro-admin/90",
-        "outline-access": "border border-neuro-access text-neuro-access hover:bg-neuro-access/10",
-        "outline-assets": "border border-neuro-assets text-neuro-assets hover:bg-neuro-assets/10",
-        "outline-pay": "border border-neuro-pay text-neuro-pay hover:bg-neuro-pay/10",
-        "outline-admin": "border border-neuro-admin text-neuro-admin hover:bg-neuro-admin/10",
       },
       size: {
         default: "h-10 px-4 py-2",

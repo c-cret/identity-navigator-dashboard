@@ -62,22 +62,7 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				},
-				// Neuro brand colors
-				neuro: {
-					bg: '#F5F6F7',
-					text: '#181F25',
-					'text-secondary': '#181F2599',
-					access: '#29BF86',
-					assets: '#4995F2',
-					pay: '#FFBB00',
-					admin: '#8F40D4',
-					red: '#F2495C'
 				}
-			},
-			fontFamily: {
-				sans: ['Roboto', 'sans-serif'],
-				heading: ['Space Grotesk', 'sans-serif']
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
