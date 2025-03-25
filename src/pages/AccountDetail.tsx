@@ -10,10 +10,11 @@ import {
 } from '@/components/ui/tabs';
 import AccountInfo from '@/components/accounts/AccountInfo';
 import AccountIdentity from '@/components/accounts/AccountIdentity';
+import AccountHistory from '@/components/accounts/AccountHistory';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
-import type { Account, Identity } from '@/types/account';
+import type { Account, Identity, ActivityItem, OldIdentity } from '@/types/account';
 
 // Mock data - in a real app this would come from an API
 const mockAccounts: Record<string, Account> = {
@@ -26,7 +27,8 @@ const mockAccounts: Record<string, Account> = {
     identityStatus: 'approved',
     createdAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000),
     lastLogin: new Date(Date.now() - 1 * 60 * 60 * 1000),
-    avatar: 'https://i.pravatar.cc/150?img=1'
+    avatar: 'https://i.pravatar.cc/150?img=1',
+    status: 'active'
   },
   '2': {
     id: '2',
@@ -37,7 +39,8 @@ const mockAccounts: Record<string, Account> = {
     identityStatus: 'pending',
     createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
     lastLogin: new Date(Date.now() - 24 * 60 * 60 * 1000),
-    avatar: 'https://i.pravatar.cc/150?img=5'
+    avatar: 'https://i.pravatar.cc/150?img=5',
+    status: 'active'
   },
   '3': {
     id: '3',
@@ -45,7 +48,8 @@ const mockAccounts: Record<string, Account> = {
     email: 'm.davis@example.com',
     phoneNumber: '+1 (555) 234-5678',
     hasIdentity: false,
-    createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+    createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+    status: 'active'
   },
   '4': {
     id: '4',
@@ -56,7 +60,8 @@ const mockAccounts: Record<string, Account> = {
     identityStatus: 'rejected',
     createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
     lastLogin: new Date(Date.now() - 2 * 60 * 60 * 1000),
-    avatar: 'https://i.pravatar.cc/150?img=10'
+    avatar: 'https://i.pravatar.cc/150?img=10',
+    status: 'active'
   },
   '5': {
     id: '5',
@@ -67,7 +72,8 @@ const mockAccounts: Record<string, Account> = {
     identityStatus: 'compromised',
     createdAt: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000),
     lastLogin: new Date(Date.now() - 12 * 60 * 60 * 1000),
-    avatar: 'https://i.pravatar.cc/150?img=12'
+    avatar: 'https://i.pravatar.cc/150?img=12',
+    status: 'active'
   },
   '6': {
     id: '6',
@@ -76,7 +82,18 @@ const mockAccounts: Record<string, Account> = {
     phoneNumber: '+1 (555) 678-9012',
     hasIdentity: false,
     createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
-    lastLogin: new Date(Date.now() - 36 * 60 * 60 * 1000)
+    lastLogin: new Date(Date.now() - 36 * 60 * 60 * 1000),
+    status: 'inactive'
+  },
+  '7': {
+    id: '7',
+    name: 'David Williams',
+    email: 'd.williams@example.com',
+    phoneNumber: '+1 (555) 789-0123',
+    hasIdentity: false,
+    createdAt: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000),
+    lastLogin: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000),
+    status: 'inactive'
   }
 };
 
@@ -143,6 +160,151 @@ const mockIdentities: Record<string, Identity> = {
   }
 };
 
+// Mock old identity records
+const mockOldIdentities: Record<string, OldIdentity[]> = {
+  '1': [
+    {
+      id: 'old-identity1',
+      accountId: '1',
+      firstName: 'John',
+      lastName: 'Smith',
+      identityNumber: 'ID123456789-OLD',
+      state: 'obsoleted',
+      createdAt: new Date(Date.now() - 180 * 24 * 60 * 60 * 1000),
+      expiredAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000),
+      reason: 'Identity document renewed'
+    }
+  ],
+  '5': [
+    {
+      id: 'old-identity5-1',
+      accountId: '5',
+      firstName: 'Robert',
+      lastName: 'Chen',
+      identityNumber: 'ID789123456-OLD1',
+      state: 'obsoleted',
+      createdAt: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000),
+      expiredAt: new Date(Date.now() - 180 * 24 * 60 * 60 * 1000),
+      reason: 'Address change'
+    },
+    {
+      id: 'old-identity5-2',
+      accountId: '5',
+      firstName: 'Robert',
+      lastName: 'Chen',
+      identityNumber: 'ID789123456-OLD2',
+      state: 'compromised',
+      createdAt: new Date(Date.now() - 180 * 24 * 60 * 60 * 1000),
+      expiredAt: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000),
+      reason: 'Security breach'
+    }
+  ]
+};
+
+// Mock account activity
+const mockAccountActivities: Record<string, ActivityItem[]> = {
+  '1': [
+    {
+      id: 'act1-1',
+      type: 'login',
+      description: 'Logged in from New York, NY',
+      timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000),
+      ipAddress: '192.168.1.1',
+      device: 'Chrome on Windows'
+    },
+    {
+      id: 'act1-2',
+      type: 'contract',
+      description: 'Signed rental agreement #1234',
+      documentId: 'doc-1234',
+      timestamp: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
+      ipAddress: '192.168.1.1',
+      device: 'Chrome on Windows'
+    },
+    {
+      id: 'act1-3',
+      type: 'identity',
+      description: 'Identity verified and approved',
+      timestamp: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000),
+      ipAddress: '192.168.1.1',
+      device: 'Chrome on Windows'
+    }
+  ],
+  '2': [
+    {
+      id: 'act2-1',
+      type: 'login',
+      description: 'Logged in from San Francisco, CA',
+      timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000),
+      ipAddress: '192.168.2.2',
+      device: 'Safari on macOS'
+    },
+    {
+      id: 'act2-2',
+      type: 'identity',
+      description: 'Identity submission pending review',
+      timestamp: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+      ipAddress: '192.168.2.2',
+      device: 'Safari on macOS'
+    }
+  ],
+  '4': [
+    {
+      id: 'act4-1',
+      type: 'login',
+      description: 'Logged in from Seattle, WA',
+      timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
+      ipAddress: '192.168.4.4',
+      device: 'Firefox on Linux'
+    },
+    {
+      id: 'act4-2',
+      type: 'identity',
+      description: 'Identity rejected - unclear document',
+      timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+      ipAddress: '192.168.4.4',
+      device: 'Firefox on Linux'
+    }
+  ],
+  '5': [
+    {
+      id: 'act5-1',
+      type: 'login',
+      description: 'Logged in from Austin, TX',
+      timestamp: new Date(Date.now() - 12 * 60 * 60 * 1000),
+      ipAddress: '192.168.5.5',
+      device: 'Chrome on Android'
+    },
+    {
+      id: 'act5-2',
+      type: 'contract',
+      description: 'Signed employment contract #5678',
+      documentId: 'doc-5678',
+      timestamp: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+      ipAddress: '192.168.5.5',
+      device: 'Chrome on Android'
+    },
+    {
+      id: 'act5-3',
+      type: 'identity',
+      description: 'Identity marked as compromised',
+      timestamp: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000),
+      ipAddress: '192.168.5.5',
+      device: 'Chrome on Android'
+    }
+  ],
+  '6': [
+    {
+      id: 'act6-1',
+      type: 'login',
+      description: 'Last login from Chicago, IL',
+      timestamp: new Date(Date.now() - 36 * 60 * 60 * 1000),
+      ipAddress: '192.168.6.6',
+      device: 'Safari on iOS'
+    }
+  ]
+};
+
 const AccountDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -163,6 +325,8 @@ const AccountDetail = () => {
 
   const account = id ? mockAccounts[id] : undefined;
   const identity = account?.hasIdentity && id ? mockIdentities[id] : undefined;
+  const oldIdentities = id ? mockOldIdentities[id] || [] : [];
+  const accountActivities = id ? mockAccountActivities[id] || [] : [];
 
   if (!account) {
     return (
@@ -231,6 +395,7 @@ const AccountDetail = () => {
           <TabsList>
             <TabsTrigger value="details">Account Details</TabsTrigger>
             <TabsTrigger value="identity">Identity</TabsTrigger>
+            <TabsTrigger value="history">History</TabsTrigger>
           </TabsList>
           
           <TabsContent value="details" className="space-y-4 animate-fade-in">
@@ -244,8 +409,16 @@ const AccountDetail = () => {
             <AccountIdentity 
               identity={identity}
               account={account}
+              oldIdentities={oldIdentities}
               onUpdateIdentity={handleUpdateIdentity}
               onCreateIdentity={handleCreateIdentity}
+            />
+          </TabsContent>
+
+          <TabsContent value="history" className="space-y-4 animate-fade-in">
+            <AccountHistory 
+              account={account}
+              activities={accountActivities}
             />
           </TabsContent>
         </Tabs>

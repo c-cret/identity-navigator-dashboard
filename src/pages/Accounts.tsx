@@ -16,7 +16,7 @@ const Accounts = () => {
   const [activeTab, setActiveTab] = useState('accounts');
 
   // Mock accounts data
-  const accounts: Account[] = [
+  const activeAccounts: Account[] = [
     {
       id: '1',
       name: 'John Smith',
@@ -26,7 +26,8 @@ const Accounts = () => {
       identityStatus: 'approved',
       createdAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000), // 15 days ago
       lastLogin: new Date(Date.now() - 1 * 60 * 60 * 1000), // 1 hour ago
-      avatar: 'https://i.pravatar.cc/150?img=1'
+      avatar: 'https://i.pravatar.cc/150?img=1',
+      status: 'active'
     },
     {
       id: '2',
@@ -37,7 +38,8 @@ const Accounts = () => {
       identityStatus: 'pending',
       createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30 days ago
       lastLogin: new Date(Date.now() - 24 * 60 * 60 * 1000), // 24 hours ago
-      avatar: 'https://i.pravatar.cc/150?img=5'
+      avatar: 'https://i.pravatar.cc/150?img=5',
+      status: 'active'
     },
     {
       id: '3',
@@ -45,7 +47,8 @@ const Accounts = () => {
       email: 'm.davis@example.com',
       phoneNumber: '+1 (555) 234-5678',
       hasIdentity: false,
-      createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) // 7 days ago
+      createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // 7 days ago
+      status: 'active'
     },
     {
       id: '4',
@@ -56,7 +59,8 @@ const Accounts = () => {
       identityStatus: 'rejected',
       createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
       lastLogin: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
-      avatar: 'https://i.pravatar.cc/150?img=10'
+      avatar: 'https://i.pravatar.cc/150?img=10',
+      status: 'active'
     },
     {
       id: '5',
@@ -67,8 +71,13 @@ const Accounts = () => {
       identityStatus: 'compromised',
       createdAt: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000), // 45 days ago
       lastLogin: new Date(Date.now() - 12 * 60 * 60 * 1000), // 12 hours ago
-      avatar: 'https://i.pravatar.cc/150?img=12'
-    },
+      avatar: 'https://i.pravatar.cc/150?img=12',
+      status: 'active'
+    }
+  ];
+
+  // Mock inactive accounts
+  const inactiveAccounts: Account[] = [
     {
       id: '6',
       name: 'Sarah Miller',
@@ -76,7 +85,29 @@ const Accounts = () => {
       phoneNumber: '+1 (555) 678-9012',
       hasIdentity: false,
       createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // 3 days ago
-      lastLogin: new Date(Date.now() - 36 * 60 * 60 * 1000) // 36 hours ago
+      lastLogin: new Date(Date.now() - 36 * 60 * 60 * 1000), // 36 hours ago
+      status: 'inactive'
+    },
+    {
+      id: '7',
+      name: 'David Williams',
+      email: 'd.williams@example.com',
+      phoneNumber: '+1 (555) 789-0123',
+      hasIdentity: false,
+      createdAt: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000), // 90 days ago
+      lastLogin: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000), // 60 days ago
+      status: 'inactive'
+    },
+    {
+      id: '8',
+      name: 'Jennifer Brown',
+      email: 'j.brown@example.com',
+      phoneNumber: '+1 (555) 321-4567',
+      hasIdentity: true,
+      identityStatus: 'obsoleted',
+      createdAt: new Date(Date.now() - 120 * 24 * 60 * 60 * 1000), // 120 days ago
+      lastLogin: new Date(Date.now() - 100 * 24 * 60 * 60 * 1000), // 100 days ago
+      status: 'inactive'
     }
   ];
 
@@ -129,7 +160,9 @@ const Accounts = () => {
 
   const handleViewIdentity = (identity: Identity) => {
     // Find the account associated with this identity
-    const account = accounts.find(acc => acc.id === identity.accountId);
+    const allAccounts = [...activeAccounts, ...inactiveAccounts];
+    const account = allAccounts.find(acc => acc.id === identity.accountId);
+    
     if (account) {
       navigate(`/accounts/${account.id}?tab=identity`);
     } else {
@@ -173,13 +206,21 @@ const Accounts = () => {
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
           <TabsList>
-            <TabsTrigger value="accounts">Accounts</TabsTrigger>
+            <TabsTrigger value="accounts">Active Accounts</TabsTrigger>
+            <TabsTrigger value="inactive">Inactive Accounts</TabsTrigger>
             <TabsTrigger value="applications">Identity Applications</TabsTrigger>
           </TabsList>
           
           <TabsContent value="accounts" className="space-y-4 animate-fade-in">
             <AccountList 
-              accounts={accounts} 
+              accounts={activeAccounts} 
+              onView={handleViewAccount}
+            />
+          </TabsContent>
+
+          <TabsContent value="inactive" className="space-y-4 animate-fade-in">
+            <AccountList 
+              accounts={inactiveAccounts} 
               onView={handleViewAccount}
             />
           </TabsContent>

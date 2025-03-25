@@ -22,7 +22,8 @@ import {
   MoreHorizontal, 
   Search,
   Check,
-  X
+  X,
+  CalendarDays
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { Account } from '@/types/account';
@@ -41,6 +42,14 @@ const AccountList = ({ accounts, onView, className }: AccountListProps) => {
     account.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
     account.phoneNumber.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const formatDate = (date: Date) => {
+    return new Intl.DateTimeFormat('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    }).format(date);
+  };
 
   return (
     <div className={cn("space-y-4", className)}>
@@ -64,6 +73,7 @@ const AccountList = ({ accounts, onView, className }: AccountListProps) => {
               <TableHead className="hidden md:table-cell">Email</TableHead>
               <TableHead className="hidden md:table-cell">Phone</TableHead>
               <TableHead className="w-[100px] text-center">Identity</TableHead>
+              <TableHead className="hidden md:table-cell">Created</TableHead>
               <TableHead className="w-[50px]">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -100,6 +110,12 @@ const AccountList = ({ accounts, onView, className }: AccountListProps) => {
                       </Badge>
                     )}
                   </TableCell>
+                  <TableCell className="hidden md:table-cell">
+                    <div className="flex items-center">
+                      <CalendarDays className="w-3 h-3 mr-1 text-muted-foreground" />
+                      {formatDate(account.createdAt)}
+                    </div>
+                  </TableCell>
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -120,7 +136,7 @@ const AccountList = ({ accounts, onView, className }: AccountListProps) => {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
                   No accounts found
                 </TableCell>
               </TableRow>
