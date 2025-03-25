@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import DashboardLayout from '@/components/layout/DashboardLayout';
@@ -15,6 +14,20 @@ import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import type { Account, Identity, ActivityItem, OldIdentity } from '@/types/account';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 // Mock data - in a real app this would come from an API
 const mockAccounts: Record<string, Account> = {
@@ -97,6 +110,7 @@ const mockAccounts: Record<string, Account> = {
   }
 };
 
+// Mock identity data
 const mockIdentities: Record<string, Identity> = {
   '1': {
     id: 'identity1',
@@ -316,6 +330,9 @@ const AccountDetail = () => {
   const tabFromQuery = queryParams.get('tab');
   
   const [activeTab, setActiveTab] = useState(tabFromQuery || 'details');
+  const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
+  const [isDeleteAccountOpen, setIsDeleteAccountOpen] = useState(false);
+  const [isInactivateAccountOpen, setIsInactivateAccountOpen] = useState(false);
 
   useEffect(() => {
     if (tabFromQuery) {
@@ -371,24 +388,95 @@ const AccountDetail = () => {
     navigate(`/accounts/${id}?tab=${value}`, { replace: true });
   };
 
+  // Account action handlers
+  const handleChangePassword = () => {
+    setIsChangePasswordOpen(false);
+    toast({
+      title: "Password Changed",
+      description: `Password has been changed for ${account.name}`,
+    });
+  };
+
+  const handleDeleteAccount = () => {
+    setIsDeleteAccountOpen(false);
+    toast({
+      title: "Account Deleted",
+      description: `${account.name}'s account has been deleted`,
+    });
+    navigate('/accounts');
+  };
+
+  const handleInactivateAccount = () => {
+    setIsInactivateAccountOpen(false);
+    toast({
+      title: "Account Inactivated",
+      description: `${account.name}'s account has been inactivated`,
+    });
+  };
+
+  const handleAccountRecovery = () => {
+    toast({
+      title: "Account Recovery",
+      description: `Recovery email sent to ${account.email}`,
+    });
+  };
+
+  const handleAssignRole = () => {
+    toast({
+      title: "Role Assigned",
+      description: `New role has been assigned to ${account.name}`,
+    });
+  };
+
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        <div className="flex items-center gap-4">
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={() => navigate('/accounts')}
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back
-          </Button>
-          <div>
-            <h1 className="text-3xl font-semibold tracking-tight pb-1">
-              {account.name}
-            </h1>
-            <p className="text-muted-foreground">{account.email}</p>
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => navigate('/accounts')}
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back
+            </Button>
+            <div>
+              <h1 className="text-3xl font-semibold tracking-tight pb-1">
+                {account.name}
+              </h1>
+              <p className="text-muted-foreground">{account.email}</p>
+            </div>
           </div>
+          
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button>Account Actions</Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuItem onClick={() => setIsChangePasswordOpen(true)}>
+                Change Password
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleAccountRecovery}>
+                Account Recovery
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleAssignRole}>
+                Assign Role
+              </DropdownMenuItem>
+              <DropdownMenuItem 
+                onClick={() => setIsInactivateAccountOpen(true)}
+                className="text-amber-600"
+              >
+                Inactivate Account
+              </DropdownMenuItem>
+              <DropdownMenuItem 
+                onClick={() => setIsDeleteAccountOpen(true)}
+                className="text-destructive"
+              >
+                Delete Account
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
         <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-4">
@@ -423,6 +511,70 @@ const AccountDetail = () => {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Change Password Dialog */}
+      <Dialog open={isChangePasswordOpen} onOpenChange={setIsChangePasswordOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Change Password</DialogTitle>
+            <DialogDescription>
+              Set a new password for {account.name}'s account.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-4">
+            {/* In a real app, you would include a password form here */}
+            <p className="text-muted-foreground">This would include a password form in a real application.</p>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsChangePasswordOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleChangePassword}>
+              Change Password
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Account Dialog */}
+      <Dialog open={isDeleteAccountOpen} onOpenChange={setIsDeleteAccountOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Account</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete {account.name}'s account? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsDeleteAccountOpen(false)}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={handleDeleteAccount}>
+              Delete Account
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Inactivate Account Dialog */}
+      <Dialog open={isInactivateAccountOpen} onOpenChange={setIsInactivateAccountOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Inactivate Account</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to inactivate {account.name}'s account? They will no longer be able to access their account.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsInactivateAccountOpen(false)}>
+              Cancel
+            </Button>
+            <Button variant="secondary" onClick={handleInactivateAccount}>
+              Inactivate Account
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </DashboardLayout>
   );
 };
