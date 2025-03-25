@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import DashboardLayout from '@/components/layout/DashboardLayout';
@@ -458,58 +459,6 @@ const AccountDetail = () => {
               </div>
             </div>
           </div>
-          
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 w-full sm:w-auto">
-            <Button 
-              variant="outline" 
-              size="sm"
-              className="justify-start sm:justify-center"
-              onClick={() => setIsChangePasswordOpen(true)}
-            >
-              <KeyRound className="h-4 w-4 mr-2" />
-              <span className="sm:hidden lg:inline">Password</span>
-            </Button>
-            
-            <Button 
-              variant="outline" 
-              size="sm"
-              className="justify-start sm:justify-center"
-              onClick={handleAssignRole}
-            >
-              <UserCog className="h-4 w-4 mr-2" />
-              <span className="sm:hidden lg:inline">Assign Role</span>
-            </Button>
-            
-            <Button 
-              variant="outline" 
-              size="sm"
-              className="justify-start sm:justify-center"
-              onClick={handleAccountRecovery}
-            >
-              <RefreshCw className="h-4 w-4 mr-2" />
-              <span className="sm:hidden lg:inline">Recovery</span>
-            </Button>
-            
-            <Button 
-              variant="outline" 
-              size="sm"
-              className="justify-start sm:justify-center text-amber-600"
-              onClick={() => setIsInactivateAccountOpen(true)}
-            >
-              <ShieldAlert className="h-4 w-4 mr-2" />
-              <span className="sm:hidden lg:inline">Inactivate</span>
-            </Button>
-            
-            <Button 
-              variant="outline" 
-              size="sm"
-              className="justify-start sm:justify-center text-destructive"
-              onClick={() => setIsDeleteAccountOpen(true)}
-            >
-              <UserMinus className="h-4 w-4 mr-2" />
-              <span className="sm:hidden lg:inline">Delete</span>
-            </Button>
-          </div>
         </div>
 
         <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-4">
@@ -523,6 +472,60 @@ const AccountDetail = () => {
             <AccountInfo 
               account={account}
             />
+            
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 p-4 border rounded-lg bg-card">
+              <h3 className="text-lg font-semibold col-span-full mb-2">Account Actions</h3>
+              
+              <Button 
+                variant="outline" 
+                size="sm"
+                className="justify-start sm:justify-center"
+                onClick={() => setIsChangePasswordOpen(true)}
+              >
+                <KeyRound className="h-4 w-4 mr-2" />
+                <span className="sm:hidden lg:inline">Password</span>
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                size="sm"
+                className="justify-start sm:justify-center"
+                onClick={handleAssignRole}
+              >
+                <UserCog className="h-4 w-4 mr-2" />
+                <span className="sm:hidden lg:inline">Assign Role</span>
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                size="sm"
+                className="justify-start sm:justify-center"
+                onClick={handleAccountRecovery}
+              >
+                <RefreshCw className="h-4 w-4 mr-2" />
+                <span className="sm:hidden lg:inline">Recovery</span>
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                size="sm"
+                className="justify-start sm:justify-center text-amber-600"
+                onClick={() => setIsInactivateAccountOpen(true)}
+              >
+                <ShieldAlert className="h-4 w-4 mr-2" />
+                <span className="sm:hidden lg:inline">Inactivate</span>
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                size="sm"
+                className="justify-start sm:justify-center text-destructive"
+                onClick={() => setIsDeleteAccountOpen(true)}
+              >
+                <UserMinus className="h-4 w-4 mr-2" />
+                <span className="sm:hidden lg:inline">Delete</span>
+              </Button>
+            </div>
           </TabsContent>
           
           <TabsContent value="identity" className="space-y-4 animate-fade-in">
