@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import DashboardLayout from '@/components/layout/DashboardLayout';
@@ -15,7 +14,6 @@ import { ArrowLeft, KeyRound, UserCog, UserMinus, ShieldAlert, RefreshCw } from 
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/components/ui/use-toast';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import type { Account, Identity, ActivityItem, OldIdentity } from '@/types/account';
 import {
   Dialog,
@@ -524,7 +522,6 @@ const AccountDetail = () => {
           <TabsContent value="details" className="space-y-4 animate-fade-in">
             <AccountInfo 
               account={account}
-              onUpdateAccount={handleUpdateAccount}
             />
           </TabsContent>
           
