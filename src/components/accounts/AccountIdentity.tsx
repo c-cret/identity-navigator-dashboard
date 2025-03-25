@@ -28,6 +28,13 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { Account, Identity } from '@/types/account';
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 interface AccountIdentityProps {
   identity?: Identity;
@@ -43,16 +50,22 @@ const AccountIdentity = ({ identity, account, onUpdateIdentity, onCreateIdentity
     lastName: identity.lastName,
     identityNumber: identity.identityNumber,
     address: identity.address || '',
+    state: identity.state,
   } : {
     firstName: '',
     lastName: '',
     identityNumber: '',
     address: '',
+    state: 'pending' as const,
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleStateChange = (value: string) => {
+    setFormData(prev => ({ ...prev, state: value as any }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -268,6 +281,32 @@ const AccountIdentity = ({ identity, account, onUpdateIdentity, onCreateIdentity
                 />
               ) : (
                 <div className="p-2 border rounded-md bg-muted/20 min-h-[80px]">{identity.address}</div>
+              )}
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="state">Identity Status</Label>
+              {isEditing ? (
+                <Select
+                  value={formData.state}
+                  onValueChange={handleStateChange}
+                >
+                  <SelectTrigger id="state">
+                    <SelectValue placeholder="Select a status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="approved">Approved</SelectItem>
+                    <SelectItem value="pending">Pending</SelectItem>
+                    <SelectItem value="rejected">Rejected</SelectItem>
+                    <SelectItem value="obsoleted">Obsoleted</SelectItem>
+                    <SelectItem value="compromised">Compromised</SelectItem>
+                  </SelectContent>
+                </Select>
+              ) : (
+                <div className="p-2 border rounded-md bg-muted/20 flex items-center">
+                  {getStatusIcon(identity.state)}
+                  {identity.state.charAt(0).toUpperCase() + identity.state.slice(1)}
+                </div>
               )}
             </div>
 

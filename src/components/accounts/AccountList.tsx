@@ -10,7 +10,6 @@ import {
 } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { 
   DropdownMenu,
   DropdownMenuContent,
@@ -21,12 +20,7 @@ import {
 import { 
   MoreHorizontal, 
   Search,
-  CheckCircle,
-  XCircle,
-  ShieldAlert,
-  Clock,
   UserRound,
-  BadgeCheck,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { Account } from '@/types/account';
@@ -45,44 +39,6 @@ const AccountList = ({ accounts, onView, className }: AccountListProps) => {
     account.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
     account.phoneNumber.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
-  const getIdentityStatusColor = (status?: string) => {
-    if (!status) return '';
-    
-    switch (status) {
-      case 'approved':
-        return 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400';
-      case 'pending':
-        return 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400';
-      case 'rejected':
-        return 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400';
-      case 'obsoleted':
-        return 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400';
-      case 'compromised':
-        return 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400';
-      default:
-        return '';
-    }
-  };
-
-  const getIdentityStatusIcon = (status?: string) => {
-    if (!status) return <UserRound className="w-3.5 h-3.5 mr-1.5" />;
-    
-    switch (status) {
-      case 'approved':
-        return <CheckCircle className="w-3.5 h-3.5 mr-1.5" />;
-      case 'pending':
-        return <Clock className="w-3.5 h-3.5 mr-1.5" />;
-      case 'rejected':
-        return <XCircle className="w-3.5 h-3.5 mr-1.5" />;
-      case 'obsoleted':
-        return <BadgeCheck className="w-3.5 h-3.5 mr-1.5" />;
-      case 'compromised':
-        return <ShieldAlert className="w-3.5 h-3.5 mr-1.5" />;
-      default:
-        return null;
-    }
-  };
 
   const formatDate = (date?: Date) => {
     if (!date) return 'Never';
@@ -115,7 +71,6 @@ const AccountList = ({ accounts, onView, className }: AccountListProps) => {
               <TableHead className="w-[250px]">Account</TableHead>
               <TableHead className="hidden md:table-cell">Email</TableHead>
               <TableHead className="hidden md:table-cell">Phone</TableHead>
-              <TableHead className="hidden md:table-cell">Identity Status</TableHead>
               <TableHead className="w-[50px]">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -154,28 +109,6 @@ const AccountList = ({ accounts, onView, className }: AccountListProps) => {
                   <TableCell className="hidden md:table-cell">
                     {account.phoneNumber}
                   </TableCell>
-                  <TableCell className="hidden md:table-cell">
-                    {account.hasIdentity ? (
-                      <Badge 
-                        variant="secondary"
-                        className={cn(
-                          "flex items-center justify-center h-6",
-                          getIdentityStatusColor(account.identityStatus)
-                        )}
-                      >
-                        {getIdentityStatusIcon(account.identityStatus)}
-                        {account.identityStatus?.charAt(0).toUpperCase() + account.identityStatus?.slice(1) || 'None'}
-                      </Badge>
-                    ) : (
-                      <Badge 
-                        variant="outline"
-                        className="flex items-center justify-center h-6"
-                      >
-                        <UserRound className="w-3.5 h-3.5 mr-1.5" />
-                        No Identity
-                      </Badge>
-                    )}
-                  </TableCell>
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -196,7 +129,7 @@ const AccountList = ({ accounts, onView, className }: AccountListProps) => {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+                <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">
                   No accounts found
                 </TableCell>
               </TableRow>
