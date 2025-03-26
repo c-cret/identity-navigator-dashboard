@@ -21,6 +21,7 @@ export interface Identity {
   state: 'pending' | 'approved' | 'rejected' | 'compromised' | 'obsoleted';
   address?: string;
   email?: string;
+  phone?: string;
   createdAt: Date;
   profilePicture?: string;
   additionalFields?: Record<string, string>;
