@@ -10,9 +10,14 @@ import {
 } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { 
-  Clock,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
+import { 
+  MoreVertical,
   Search,
   CheckCircle,
   XCircle,
@@ -40,7 +45,9 @@ const IdentityApplicationsList = ({
 
   const filteredApplications = applications.filter(application => 
     `${application.firstName} ${application.lastName}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    application.identityNumber.toLowerCase().includes(searchTerm.toLowerCase())
+    application.identityNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (application.email && application.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (application.phone && application.phone.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   const formatDate = (date: Date) => {
@@ -70,9 +77,10 @@ const IdentityApplicationsList = ({
           <TableHeader className="bg-muted/30">
             <TableRow>
               <TableHead className="w-[250px]">Applicant</TableHead>
-              <TableHead>Identity Number</TableHead>
-              <TableHead className="hidden md:table-cell">Submitted</TableHead>
-              <TableHead className="w-[200px] text-right">Actions</TableHead>
+              <TableHead>Email</TableHead>
+              <TableHead>Phone Number</TableHead>
+              <TableHead>Submitted</TableHead>
+              <TableHead className="w-[100px] text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -91,46 +99,55 @@ const IdentityApplicationsList = ({
                     </div>
                   </TableCell>
                   <TableCell>
-                    {application.identityNumber}
+                    {application.email || "-"}
                   </TableCell>
-                  <TableCell className="hidden md:table-cell">
-                    <div className="flex items-center gap-2">
-                      <Clock className="h-3.5 w-3.5 text-muted-foreground" />
-                      {formatDate(application.createdAt)}
-                    </div>
+                  <TableCell>
+                    {application.phone || "-"}
+                  </TableCell>
+                  <TableCell>
+                    {formatDate(application.createdAt)}
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
                       <Button
                         variant="ghost"
-                        size="sm"
+                        size="icon"
                         onClick={() => onView(application)}
+                        className="h-8 w-8"
                       >
                         <Eye className="h-4 w-4" />
                       </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="bg-green-100 text-green-700 hover:bg-green-200 hover:text-green-800 border-green-200"
-                        onClick={() => onApprove(application)}
-                      >
-                        <CheckCircle className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="bg-red-100 text-red-700 hover:bg-red-200 hover:text-red-800 border-red-200"
-                        onClick={() => onReject(application)}
-                      >
-                        <XCircle className="h-4 w-4" />
-                      </Button>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon" className="h-8 w-8">
+                            <MoreVertical className="h-4 w-4" />
+                            <span className="sr-only">Open menu</span>
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem 
+                            onClick={() => onApprove(application)}
+                            className="text-green-600 cursor-pointer"
+                          >
+                            <CheckCircle className="mr-2 h-4 w-4" />
+                            Approve
+                          </DropdownMenuItem>
+                          <DropdownMenuItem 
+                            onClick={() => onReject(application)}
+                            className="text-red-600 cursor-pointer"
+                          >
+                            <XCircle className="mr-2 h-4 w-4" />
+                            Reject
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </div>
                   </TableCell>
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">
+                <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
                   No pending applications found
                 </TableCell>
               </TableRow>
