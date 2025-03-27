@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ChevronLeft, CheckCircle, XCircle, Edit, Clock, User, History, IdCard, LogOut, Key, UserPlus, Users, FileText, Settings, Shield, Plus } from 'lucide-react';
@@ -391,16 +392,17 @@ const AccountDetails: React.FC = () => {
                               {event.verifiedBy && ` · Verified by ${event.verifiedBy}`}
                             </p>
                           </div>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </TabsContent>
-              </Tabs>
-            </main>
-          </div>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </TabsContent>
+            </Tabs>
+          </main>
         </div>
-      </SidebarProvider>
+      </div>
+    </SidebarProvider>
   );
 };
 
