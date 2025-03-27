@@ -10,6 +10,7 @@ import AccountDetail from "./pages/AccountDetail";
 import Settings from "./pages/Settings";
 import Identity from "./pages/Identity";
 import NotFound from "./pages/NotFound";
+import AccountDetails from "./pages/services/AccountDetails";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +25,7 @@ const App = () => (
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/accounts" element={<Accounts />} />
           <Route path="/accounts/:id" element={<AccountDetail />} />
+          <Route path="/services/access/accounts/:id" element={<AccountDetails />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/identity" element={<Identity />} />
           <Route path="*" element={<NotFound />} />
